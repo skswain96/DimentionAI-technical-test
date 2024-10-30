@@ -733,6 +733,137 @@ export const CodeIcon = () => (
   </svg>
 );
 
+export const AttachmentIcon = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 18 18"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g clipPath="url(#clip0_997_125)">
+      <path
+        d="M11.25 5.25L6.37502 10.125C6.07665 10.4234 5.90903 10.828 5.90903 11.25C5.90903 11.672 6.07665 12.0766 6.37502 12.375C6.67339 12.6734 7.07806 12.841 7.50002 12.841C7.92198 12.841 8.32665 12.6734 8.62502 12.375L13.5 7.5C14.0968 6.90326 14.432 6.09391 14.432 5.25C14.432 4.40609 14.0968 3.59674 13.5 3C12.9033 2.40326 12.0939 2.06802 11.25 2.06802C10.4061 2.06802 9.59676 2.40326 9.00002 3L4.12502 7.875C3.22992 8.77011 2.72705 9.98413 2.72705 11.25C2.72705 12.5159 3.22992 13.7299 4.12502 14.625C5.02013 15.5201 6.23415 16.023 7.50002 16.023C8.76589 16.023 9.97992 15.5201 10.875 14.625L15.75 9.75"
+        stroke="#6C6F75"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_997_125">
+        <rect width="18" height="18" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+export const EmojiIcon = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 18 18"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g clipPath="url(#clip0_997_132)">
+      <path
+        d="M2.25 9C2.25 9.88642 2.42459 10.7642 2.76381 11.5831C3.10303 12.4021 3.60023 13.1462 4.22703 13.773C4.85382 14.3998 5.59794 14.897 6.41689 15.2362C7.23583 15.5754 8.11358 15.75 9 15.75C9.88642 15.75 10.7642 15.5754 11.5831 15.2362C12.4021 14.897 13.1462 14.3998 13.773 13.773C14.3998 13.1462 14.897 12.4021 15.2362 11.5831C15.5754 10.7642 15.75 9.88642 15.75 9C15.75 8.11358 15.5754 7.23583 15.2362 6.41689C14.897 5.59794 14.3998 4.85382 13.773 4.22703C13.1462 3.60023 12.4021 3.10303 11.5831 2.76381C10.7642 2.42459 9.88642 2.25 9 2.25C8.11358 2.25 7.23583 2.42459 6.41689 2.76381C5.59794 3.10303 4.85382 3.60023 4.22703 4.22703C3.60023 4.85382 3.10303 5.59794 2.76381 6.41689C2.42459 7.23583 2.25 8.11358 2.25 9Z"
+        stroke="#6C6F75"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6.75 7.5H6.75583"
+        stroke="#6C6F75"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M11.25 7.5H11.2558"
+        stroke="#6C6F75"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7.125 11.25C7.36941 11.4994 7.66114 11.6976 7.9831 11.8329C8.30505 11.9682 8.65077 12.0379 9 12.0379C9.34923 12.0379 9.69495 11.9682 10.0169 11.8329C10.3389 11.6976 10.6306 11.4994 10.875 11.25"
+        stroke="#6C6F75"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_997_132">
+        <rect width="18" height="18" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+export const CheckedListIcon = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 18 18"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g clipPath="url(#clip0_997_165)">
+      <path
+        d="M2.625 4.125L3.75 5.25L5.625 3.375"
+        stroke="#6C6F75"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M2.625 8.625L3.75 9.75L5.625 7.875"
+        stroke="#6C6F75"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M2.625 13.125L3.75 14.25L5.625 12.375"
+        stroke="#6C6F75"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M8.25 4.5H15"
+        stroke="#6C6F75"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M8.25 9H15"
+        stroke="#6C6F75"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M8.25 13.5H15"
+        stroke="#6C6F75"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_997_165">
+        <rect width="18" height="18" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
 export const checkIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"

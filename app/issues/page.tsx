@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EditorView } from "prosemirror-view";
 
 import { useModal } from "@/context/modal";
@@ -19,6 +19,16 @@ type IssueData = {
   priority?: string;
   project?: string;
   dueDate?: string;
+};
+
+const debounce = (func: any, delay: any) => {
+  let timeoutId: any;
+  return (...args: any) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
 };
 
 function removeIcons(obj: any): any {
@@ -75,11 +85,13 @@ export default function CreateIssue() {
   const [issueTitle, setIssueTitle] = useState<string>("");
   const [optInputData, setOptInputData] = useState<any>(null);
   const [markdown, setMarkdown] = useState<string>("");
+  const [issueList, setIssueList] = useState<any>([]);
+  const [suggestionList, setSuggestionList] = useState<any>([]);
 
   const { openModal, closeModal } = useModal();
 
   const handleSubmitTask: any = async (data: IssueData) => {
-    const response = await fetch("/api/issue", {
+    const response = await fetch("/api/createIssue", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -96,6 +108,42 @@ export default function CreateIssue() {
       console.error("Error adding issue:", result.error);
     }
   };
+
+  async function checkKeywordsForSuggestion(data: any) {
+    const response = await fetch("/api/checkKeywords", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    setSuggestionList(result?.data);
+  }
+
+  async function getIssueList() {
+    const response = await fetch("/api/getIssuesList", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      console.log("Issue kist:", result.data);
+      setIssueList(result.data);
+    } else {
+      console.error("Error adding issue:", result.error);
+    }
+  }
+
+  useEffect(() => {
+    getIssueList();
+  }, []);
 
   return (
     <>
@@ -127,8 +175,25 @@ export default function CreateIssue() {
           <input
             className="w-full text-gray-900 font-medium text-base outline-none p-1"
             placeholder="Task title"
-            onChange={(e) => {
+            onChange={async (e) => {
               setIssueTitle(e.target.value);
+
+              const data = {
+                queryString: e.target.value || markdown,
+                issuesList: issueList,
+              };
+
+              if (!data?.queryString) {
+                return;
+              }
+
+              await checkKeywordsForSuggestion(data);
+
+              // const debouncedCheckKeywords = debounce(async (data: any) => {
+              //   await checkKeywordsForSuggestion(data);
+              // }, 100);
+
+              // debouncedCheckKeywords(data);
             }}
           />
 
@@ -146,6 +211,7 @@ export default function CreateIssue() {
             handleInputData={(data: any) => {
               setOptInputData(data);
             }}
+            suggestionList={suggestionList}
           />
         </div>
       </Modal>

@@ -4,10 +4,37 @@ import { SelectMenu } from "@/components/SelectMenu";
 import { createIssueOptions } from "@/constants/createIssueFieldOptions";
 import { suggestionIcon, cloudIcon } from "@/public/icons";
 
+function hasMatchingWord(inputString: string, wordArray: any) {
+  if (inputString) {
+    const wordsInString = inputString.toLowerCase().split(/\s+/);
+
+    return wordArray?.some((word: any) =>
+      wordsInString.includes(word.toLowerCase())
+    );
+  }
+}
+
+function getPastelColor(index: number) {
+  // Define an array of pastel colors
+  const pastelColors = [
+    "#FFB3BA", // Light Pink
+    "#FFDFBA", // Light Peach
+    "#babeff", // Light Purple
+    "#BAFFC9", // Light Green
+    "#BAE1FF", // Light Blue
+    "#D7BAFF", // Light Purple
+    "#FFBCD9", // Light Rose
+  ];
+
+  // Use modulo to wrap around the array based on the index
+  return pastelColors[index % pastelColors.length];
+}
+
 export const Toolbar: React.FC<{
   issueTitle: string;
   handleInputData: (arg: any) => void;
-}> = ({ issueTitle, handleInputData }) => {
+  suggestionList: any;
+}> = ({ issueTitle, handleInputData, suggestionList = [] }) => {
   const [height, setHeight] = useState(0);
   const [wordList, setWordList] = useState<any>([]);
   const [activeSelectOptions, setActiveSelectOptions] = useState<any>(null);
@@ -27,9 +54,8 @@ export const Toolbar: React.FC<{
   }, [selectedValue]);
 
   useEffect(() => {
-    const splitWords: any = issueTitle.split(" ");
-    setWordList(splitWords);
-  }, [issueTitle]);
+    setWordList(suggestionList);
+  }, [suggestionList]);
 
   useEffect(() => {
     let animationFrame: number;
@@ -38,14 +64,14 @@ export const Toolbar: React.FC<{
     let currentHeight = height;
 
     const animateHeight = () => {
-      if (wordList.includes("cloud") && currentHeight < maxHeight) {
+      if (hasMatchingWord(issueTitle, wordList) && currentHeight < maxHeight) {
         // Expanding height
         currentHeight = Math.min(currentHeight + incrementAmount, maxHeight);
         setHeight(currentHeight);
         if (currentHeight < maxHeight) {
           animationFrame = requestAnimationFrame(animateHeight);
         }
-      } else if (!wordList.includes("cloud") && currentHeight > 0) {
+      } else if (!hasMatchingWord(issueTitle, wordList) && currentHeight > 0) {
         // Collapsing height
         currentHeight = Math.max(currentHeight - incrementAmount, 0);
         setHeight(currentHeight);
@@ -60,7 +86,39 @@ export const Toolbar: React.FC<{
     return () => {
       cancelAnimationFrame(animationFrame);
     };
-  }, [wordList]);
+  }, [issueTitle, wordList]);
+
+  // useEffect(() => {
+  //   let animationFrame: any;
+  //   const maxHeight = 40;
+  //   const incrementAmount = 5; // Increment per frame
+
+  //   const animateHeight = () => {
+  //     if (hasMatchingWord(issueTitle, wordList) && height < maxHeight) {
+  //       // Expanding height
+  //       setHeight((prevHeight) => {
+  //         const newHeight = Math.min(prevHeight + incrementAmount, maxHeight);
+  //         if (newHeight < maxHeight)
+  //           animationFrame = requestAnimationFrame(animateHeight);
+  //         return newHeight;
+  //       });
+  //     } else if (!hasMatchingWord(issueTitle, wordList) && height > 0) {
+  //       // Collapsing height
+  //       setHeight((prevHeight) => {
+  //         const newHeight = Math.max(prevHeight - incrementAmount, 0);
+  //         if (newHeight > 0)
+  //           animationFrame = requestAnimationFrame(animateHeight);
+  //         return newHeight;
+  //       });
+  //     }
+  //   };
+
+  //   animateHeight();
+
+  //   return () => {
+  //     cancelAnimationFrame(animationFrame);
+  //   };
+  // }, [issueTitle, wordList, height]);
 
   return (
     <React.Fragment>
@@ -69,26 +127,26 @@ export const Toolbar: React.FC<{
         className={`relative`}
         style={{ height: `${height}px` }}
       >
-        {wordList?.length > 0 && wordList?.includes("cloud") && (
+        {wordList?.length > 0 && hasMatchingWord(issueTitle, wordList) && (
           <div className="inline-flex items-center w-full space-x-2 pb-3 pt-[2px] transition-opacity ease-in-out duration-300">
             <div className="inline-flex items-center justify-center text-[#94989E]">
               {suggestionIcon}
             </div>
             <div className="inline-flex items-center space-x-2">
-              {[
-                {
-                  label: "cloud",
-                  icon: cloudIcon,
-                },
-              ].map((opt: any, index: number) => {
+              {suggestionList.map((opt: any, index: number) => {
                 return (
                   <button
                     key={opt?.label + "_" + index}
                     className="inline-flex items-center justify-center space-x-2 border-[1px] border-dashed border-[#DFE1E4] rounded-lg px-3 py-[6px] text-[#94989E] outline-none"
                   >
-                    {opt?.icon}
+                    <div
+                      className="h-2 min-w-2 w-2 rounded-full"
+                      style={{
+                        backgroundColor: getPastelColor(index),
+                      }}
+                    />
 
-                    <span className="text-xs font-medium">{opt?.label}</span>
+                    <span className="text-xs font-medium">{opt}</span>
                   </button>
                 );
               })}

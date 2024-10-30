@@ -14,7 +14,7 @@ export const SelectMenu: React.FC<any> = ({
 }) => {
   return (
     <OutsideAlerter handleOutsideClick={handleOutsideClick}>
-      <div className="!m-0 inline-flex flex-col w-auto min-w-[180px] bg-white rounded-lg absolute left-0 top-9 text-gray-800 text-sm border-[1px] border-[#DFE1E4] shadow-dropdown">
+      <div className="!m-0 inline-flex flex-col w-auto min-w-[180px] bg-white rounded-lg absolute left-0 top-9 z-10 text-gray-800 text-sm border-[1px] border-[#DFE1E4] shadow-dropdown">
         <div className="inline-flex w-full border-b-[1px] border-b-[#DFE1E4] rounded-t-lg">
           <input
             placeholder={placeholder}

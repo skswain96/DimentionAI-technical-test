@@ -67,3 +67,57 @@ input::placeholder {
   color: #4363dc;
   cursor: pointer;
 }
+
+#emoji-container section {
+  max-height: 262px;
+}
+
+.ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 20px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  color: #1b1b1b;
+}
+
+.ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  color: #1b1b1b;
+}
+
+/* Styling individual list items */
+/* .ProseMirror ul {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.ProseMirror ul li {
+  display: inline-flex;
+  align-items: center;
+} */
+
+.ProseMirror ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.ProseMirror ul li {
+  position: relative;
+  padding-left: 1em;
+  margin-bottom: 4px;
+  line-height: 1.6;
+}
+
+.ProseMirror ul li::before {
+  content: "•";
+  color: #1b1b1b;
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-right: 8px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
