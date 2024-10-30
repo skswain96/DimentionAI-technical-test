@@ -1,6 +1,7 @@
 // PMMenuBar.tsx
 import { useMemo, useRef, useState } from "react";
 import { EditorView } from "prosemirror-view";
+// @ts-ignore
 import { toggleMark, setBlockType, Command } from "prosemirror-commands";
 import { schema } from "prosemirror-markdown";
 import { wrapInList, liftListItem } from "prosemirror-schema-list";
