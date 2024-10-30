@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -12,10 +12,58 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.ProseMirror {
+  min-height: 4.75rem;
+  outline: none;
+}
+
+input::placeholder {
+  color: #94989e;
+}
+
+.ProseMirror .placeholder::before {
+  content: var(--placeholder-text);
+  color: #94989e;
+  position: absolute;
+}
+
+.ProseMirror h1 {
+  font-size: 1.375rem;
+  line-height: 1.75rem;
+  letter-spacing: -0.004375rem;
+}
+
+.ProseMirror h2 {
+  font-size: 1.1875rem;
+  line-height: 1.75rem;
+  letter-spacing: 0.003125rem;
+}
+
+.ProseMirror h3 {
+  font-size: 1.0625rem;
+  line-height: 1.5rem;
+  letter-spacing: 0.00625rem;
+}
+
+.ProseMirror code {
+  width: 100%;
+  display: block;
+  background-color: #ededed;
+  border: 1px solid #e4e4e4;
+  overflow-x: auto;
+  padding: 1em 1em;
+  line-height: 1.6em;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+}
+
+.ProseMirror a {
+  color: #4363dc;
+  cursor: pointer;
 }

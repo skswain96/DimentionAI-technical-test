@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Reference schema for Status
+model Status {
+  id     String      @id @default(cuid())
+  cat    String?
+  key    String?
+  issues IssueList[] @relation("IssueStatus")
+}
+
+// Reference schema for Assignee
+model Assignee {
+  id     String      @id @default(cuid())
+  cat    String?
+  key    String?
+  issues IssueList[] @relation("IssueAssignees")
+}
+
+// Reference schema for Priority
+model Priority {
+  id     String      @id @default(cuid())
+  cat    String?
+  key    String?
+  issues IssueList[] @relation("IssuePriority")
+}
+
+// Reference schema for Tag
+model Tag {
+  id     String      @id @default(cuid())
+  cat    String?
+  key    String?
+  issues IssueList[] @relation("IssueTags")
+}
+
+// Reference schema for Project
+model Project {
+  id     String      @id @default(cuid())
+  cat    String?
+  key    String?
+  issues IssueList[] @relation("IssueProject")
+}
+
+// Main IssueList model
+model IssueList {
+  id         String     @id @default(cuid())
+  title      String
+  content    String
+  tags       Tag[]      @relation("IssueTags")
+  status     Status?    @relation("IssueStatus", fields: [statusId], references: [id])
+  statusId   String?
+  assignee   Assignee[] @relation("IssueAssignees")
+  priority   Priority?  @relation("IssuePriority", fields: [priorityId], references: [id])
+  priorityId String?
+  project    Project?   @relation("IssueProject", fields: [projectId], references: [id])
+  projectId  String?
+  dueDate    DateTime?
+  createdAt  DateTime   @default(now()) @map(name: "created_at")
+  updatedAt  DateTime   @updatedAt @map(name: "updated_at")
+
+  @@map(name: "IssueList")
+}
+
+// model IssueList {
+//   id        String    @id @default(cuid())
+//   title     String
+//   content   String
+//   tags      Json?
+//   status    Json?
+//   assignee  Json?
+//   priority  Json?
+//   project   Json?
+//   dueDate   DateTime?
+//   createdAt DateTime  @default(now()) @map(name: "created_at")
+//   updatedAt DateTime  @updatedAt @map(name: "updated_at")
+
+//   @@map(name: "IssueList")
+// }
