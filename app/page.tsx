@@ -133,6 +133,7 @@ export default function Home() {
       }
 
       const result = await response.json();
+      setSuggestionList([]);
       setIssueList(result.data);
     } catch (error) {
       console.error("Failed to fetch issue list:", error);
