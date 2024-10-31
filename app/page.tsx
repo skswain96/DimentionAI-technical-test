@@ -148,7 +148,7 @@ export default function Home() {
   useEffect(() => {
     getIssueList();
 
-    console.log("here", process.env.TEST);
+    console.log("here", process.env.NEXT_PUBLIC_TEST);
   }, []);
 
   useEffect(() => {
