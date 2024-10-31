@@ -1,7 +1,7 @@
 import OpenAIApi from "openai";
 
 // Define your OpenAI API Key
-const apiKey: any = process.env.OPENAI_API_KEY;
+const apiKey: any = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
 export async function getMatchedKeywords(
   issueTitle: any,

@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 export async function GET(req: Request) {
-  console.log("here 2", process.env.TEST);
+  console.log("here 2", process.env.NEXT_PUBLIC_TEST);
 
   try {
     const issues = await prisma.issueList.findMany({
