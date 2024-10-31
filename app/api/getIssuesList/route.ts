@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 export async function GET(req: Request) {
   try {
@@ -16,6 +16,7 @@ export async function GET(req: Request) {
       { status: 201 }
     );
   } catch (error) {
+    console.error("error", error);
     return NextResponse.json(
       { success: false, message: "Failed to fetch list", error: error },
       { status: 500 }

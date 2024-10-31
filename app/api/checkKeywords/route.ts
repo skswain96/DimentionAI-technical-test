@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { getMatchedKeywords } from "@/utils/getMatchedKeywords";
 import { extractKeywords } from "@/utils/helper";
