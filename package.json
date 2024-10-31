@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "preinstall": "npm install -g prisma",
-    "build": "next build && npx prisma generate",
+    "build": "npx prisma format && npx prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "prisma generate",
+    "preinstall": "npm install -g prisma"
   },
   "dependencies": {
     "@emoji-mart/react": "^1.1.1",
