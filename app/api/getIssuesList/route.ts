@@ -17,7 +17,7 @@ export async function GET(req: Request) {
     );
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: "Failed to match keywords", error: error },
+      { success: false, message: "Failed to fetch list", error: error },
       { status: 500 }
     );
   }
