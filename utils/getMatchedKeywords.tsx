@@ -21,18 +21,20 @@ export async function getMatchedKeywords(
     Return only single matched words as an array which is relevant to be used as tags for a new task.
   `;
 
-  console.log("here prompt", prompt);
-
   try {
-    const response: any = await openai.chat.completions.create({
+    const response: any = await openai?.chat?.completions?.create({
       messages: [{ role: "user", content: prompt }],
       model: "gpt-4",
       max_tokens: 50,
     });
 
-    const responseText = response.choices[0].message.content;
+    const responseText = response?.choices[0]?.message?.content;
 
-    const matchedWords = responseText.match(/\[(.*?)\]/);
+    const matchedWords = responseText?.match(/\[(.*?)\]/);
+
+    if (!matchedWords) {
+      return [];
+    }
 
     if (matchedWords && matchedWords[1]) {
       // Convert the string to an array

@@ -80,7 +80,6 @@ const keys: any = {
     if (parentNode.type.name === schema.nodes.list_item.name) {
       // Check if selection is at the end of the list item
       if ($from.parentOffset === listItem.content.size) {
-        console.log("here 1", schema.nodes.list_item);
         const splitResult = splitListItem(schema.nodes.list_item)(
           state,
           dispatch

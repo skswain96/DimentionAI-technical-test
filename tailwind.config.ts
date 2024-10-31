@@ -16,6 +16,8 @@ const config: Config = {
         button: "0px 3px 0px 0px #3F2ABD",
         dropdown:
           "#00000012 0px 3px 8px, #00000012 0px 2px 5px, #00000012 0px 1px 1px",
+        alert:
+          "#00000012 0px 3px 8px, #00000012 0px 2px 5px, #00000012 0px 1px 1px",
       },
     },
   },

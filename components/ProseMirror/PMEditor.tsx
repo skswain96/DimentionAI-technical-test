@@ -76,7 +76,6 @@ export const PMEditorReact: React.FC<PMEditorReactProps> = ({
         schema: extendedSchema,
       }),
       dispatchTransaction: (transaction: Transaction) => {
-        console.log("transaction works", transaction);
         const docChanged = transaction.docChanged;
         const state = editorView.state.apply(transaction);
         if (docChanged) {

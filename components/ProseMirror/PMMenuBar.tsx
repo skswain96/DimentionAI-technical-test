@@ -20,6 +20,7 @@ import {
   CodeIcon,
   AttachmentIcon,
   EmojiIcon,
+  ReferIcon,
 } from "@/public/icons";
 
 type IPMMenuItem = {
@@ -169,18 +170,6 @@ const toggleCheckedList: IPMMenuItem = {
       // Wrap in checked_list if not already in one
       return wrapInList(schema.nodes.checked_list)(state, dispatch);
     }
-
-    // if (inCheckedList) {
-    //   // If already in a checked list item, lift it out
-    //   return liftListItem(schema.nodes.checked_list_item)(state, dispatch);
-    // } else {
-    //   // Otherwise, wrap selection in a checked list
-    //   const canWrap = wrapInList(schema.nodes.checked_list)(state, dispatch);
-    //   if (!canWrap) {
-    //     console.warn("Cannot wrap selection in checked list.");
-    //   }
-    //   return canWrap;
-    // }
   },
   icon: <CheckedListIcon />, // Replace with an appropriate icon for checked list
 };
@@ -193,6 +182,7 @@ const PMMenuBar: React.FC<{ editorView: EditorView }> = ({ editorView }) => {
   const menuItemsData: IPMMenuItem[] = useMemo(
     () => [
       insertAttachment(fileInputRef),
+      { command: () => null, icon: <ReferIcon /> },
       insertEmoji(setShowEmojiPicker),
       { command: toggleHeadingLevel(1), icon: <HeadingOneIcon /> },
       { command: toggleMark(schema.marks.strong), icon: <BoldIcon /> },
@@ -239,10 +229,16 @@ const PMMenuBar: React.FC<{ editorView: EditorView }> = ({ editorView }) => {
         <button
           key={index}
           onClick={() => {
-            command(editorView.state, editorView.dispatch);
-            editorView.focus();
+            if (index !== menuItemsData?.length - 1 && index !== 1) {
+              command(editorView.state, editorView.dispatch);
+              editorView.focus();
+            }
           }}
-          className="h-[24px] w-[24px] inline-flex items-center justify-center text-[#6C6F75] hover:bg-gray-100 rounded-full"
+          className={`h-[24px] w-[24px] inline-flex items-center justify-center text-[#6C6F75] hover:bg-gray-100 rounded-full ${
+            index !== menuItemsData?.length - 1 && index !== 1
+              ? "cursor-pointer"
+              : "cursor-not-allowed"
+          }`}
           aria-label={`Toolbar action ${index}`}
         >
           {icon}

@@ -6,14 +6,17 @@ import { enterIcon } from "@/public/icons";
 export const ModalAction: React.FC<{
   editorView: EditorView;
   handleOnClick: () => void;
-}> = ({ editorView, handleOnClick }) => {
+  disable?: boolean;
+}> = ({ editorView, handleOnClick, disable = false }) => {
   return (
     <div className="inline-flex items-center justify-between w-full p-3 border-t-[1px] border-t-[#DFE1E499]">
       <PMMenuBar editorView={editorView!} />
 
       <Button
         variant="primary"
-        className="text-sm inline-flex items-center space-x-3 px-[14px] min-h-8"
+        className={`text-sm inline-flex items-center space-x-3 px-[14px] min-h-8 ${
+          disable ? "opacity-60" : "opacity-100"
+        } transition-opacity duration-300`}
         onClick={handleOnClick}
       >
         <span>Create</span>

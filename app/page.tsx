@@ -1,101 +1,318 @@
-import Image from "next/image";
+"use client";
+
+import React, { useCallback, useEffect, useState } from "react";
+import { EditorView } from "prosemirror-view";
+import debounce from "lodash/debounce";
+
+import { useModal } from "@/context/modal";
+import { Modal } from "@/components/Modal";
+import { ModalAction } from "@/components/Modal/ModalAction";
+import { PMEditorReact } from "@/components/ProseMirror/PMEditor";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { Toolbar } from "@/components/ProseMirror/Toolbar";
+
+import { infoIcon, closeIcon, plusIcon } from "@/public/icons";
+
+import { removeIcons, getPayload } from "@/utils/helper";
+
+type IssueData = {
+  title?: string;
+  content?: string;
+  tags?: string;
+  status?: string;
+  assignee?: string;
+  priority?: string;
+  project?: string;
+  dueDate?: string;
+};
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [editorView, setEditorView] = useState<EditorView | null>(null);
+  const [issueTitle, setIssueTitle] = useState<string>("");
+  const [optInputData, setOptInputData] = useState<any>(null);
+  const [markdown, setMarkdown] = useState<string>("");
+  const [issueList, setIssueList] = useState<any>([]);
+  const [suggestionList, setSuggestionList] = useState<any>([]);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const [alertMessage, setAlertMessage] = useState<any>(null);
+
+  const { openModal, closeModal } = useModal();
+
+  const handleSubmitTask: any = useCallback(async (data: IssueData) => {
+    try {
+      const response = await fetch("/api/createIssue", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        setAlertMessage({
+          title: "Something went wrong",
+          body: "Failed to create issue.",
+          type: "error",
+        });
+
+        return;
+      }
+
+      const result = await response.json();
+
+      if (result?.data) {
+        setAlertMessage({
+          title: "Issue created successfully",
+          body: "Your issue has been created.",
+          type: "success",
+        });
+      }
+
+      closeModal();
+    } catch (error) {
+      setAlertMessage({
+        title: "Something went wrong",
+        body: "Failed to create issue.",
+        type: "error",
+      });
+      console.error("Failed to create issue:", error);
+    }
+  }, []);
+
+  const checkKeywordsForSuggestion: any = useCallback(
+    debounce(async (data: any) => {
+      try {
+        const response = await fetch("/api/checkKeywords", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+          setAlertMessage({
+            title: "Something went wrong with Open AI",
+            body: "Please try again.",
+            type: "error",
+          });
+
+          return;
+        }
+
+        const result = await response.json();
+        setSuggestionList(result?.data);
+      } catch (error) {
+        console.error("Failed to fetch suggestions:", error);
+        // Optionally, set an error state here
+        setSuggestionList([]);
+      }
+    }, 300),
+    []
+  );
+
+  async function getIssueList() {
+    try {
+      const response = await fetch("/api/getIssuesList", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        setAlertMessage({
+          title: "Something went wrong",
+          body: "Failed to fetch issues.",
+          type: "error",
+        });
+
+        return;
+      }
+
+      const result = await response.json();
+      setIssueList(result.data);
+    } catch (error) {
+      console.error("Failed to fetch issue list:", error);
+
+      setAlertMessage({
+        title: "Something went wrong",
+        body: "Failed to fetch issues.",
+        type: "error",
+      });
+    }
+  }
+
+  useEffect(() => {
+    getIssueList();
+  }, []);
+
+  useEffect(() => {
+    let timeoutId: any;
+
+    if (alertMessage) {
+      timeoutId = setTimeout(() => {
+        setAlertMessage(null);
+      }, 5000);
+    }
+
+    return () => clearTimeout(timeoutId);
+  }, [alertMessage]);
+
+  return (
+    <div className="w-screen h-screen relative overflow-hidden z-0 bg-[#ededed] p-3">
+      <div className="inline-flex flex-col w-full h-full rounded-lg bg-white">
+        <div className="inline-flex items-center justify-between w-full px-8 py-2 border-b-[1px] border-b-[#ededed]">
+          <span className="text-sm text-gray-800">Tasks</span>
+
+          <button
+            className="inline-flex items-center space-x-2 text-sm py-2 px-3 rounded-lg text-white bg-[#533BE5] hover:bg-[#422fbb]"
+            onClick={() => {
+              openModal();
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <span>Create Issue</span>
+
+            {plusIcon}
+          </button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+
+        <div className="inline-flex flex-col w-full">
+          <div
+            className={`inline-flex items-center border-b-[1px] border-b-gray-200 py-2 px-8 bg-gray-50`}
+          >
+            <span className="text-xs text-gray-700">Title</span>
+          </div>
+          {issueList?.map((item: any, index: number) => {
+            return (
+              <div
+                key={item?.title + "_" + index}
+                className={`inline-flex items-center space-x-5 border-b-[1px] border-b-gray-100 py-2 px-8`}
+              >
+                <div>
+                  <span className="text-xs text-gray-500">{item?.title}</span>
+                </div>
+
+                <div className="inline-flex items-center space-x-2">
+                  {item?.tags?.map((tag: any, index: number) => {
+                    return (
+                      <button
+                        key={tag?.key + "_" + index}
+                        className="inline-flex items-center justify-center border-[1px] border-dashed border-[#DFE1E4] rounded-lg px-2 py-1 text-[#94989E] outline-none"
+                      >
+                        <span className="text-xs font-medium">{tag?.cat}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <Modal
+        breadcrumb={<Breadcrumb />}
+        footer={
+          <ModalAction
+            editorView={editorView!}
+            disable={issueTitle && markdown ? false : true}
+            handleOnClick={() => {
+              if (issueTitle && markdown) {
+                const payload = {
+                  title: issueTitle,
+                  content: markdown,
+                  ...removeIcons(getPayload(optInputData)),
+                };
+
+                handleSubmitTask(payload);
+              } else {
+                setAlertMessage({
+                  title: "Title and description required",
+                  body: "Please enter a title and description before submitting",
+                  type: "info",
+                });
+              }
+            }}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+        }
+      >
+        <div className="inline-flex flex-col h-full w-full px-3 space-y-2">
+          <input
+            className="w-full text-gray-900 font-medium text-base outline-none p-1"
+            placeholder="Task title"
+            onChange={async (e) => {
+              setIssueTitle(e.target.value);
+
+              const data = {
+                queryString: e.target.value || markdown,
+                issuesList: issueList,
+              };
+
+              if (!data?.queryString) {
+                return;
+              }
+
+              await checkKeywordsForSuggestion(data);
+            }}
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
+
+          <PMEditorReact
+            handleEditorViewState={(view: any) => {
+              setEditorView(view);
+            }}
+            handleMarkdownValue={(markdownValue) => {
+              setMarkdown(markdownValue);
+            }}
           />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+          <Toolbar
+            issueTitle={issueTitle}
+            handleInputData={(data: any) => {
+              setOptInputData(data);
+            }}
+            suggestionList={suggestionList}
+          />
+        </div>
+      </Modal>
+
+      <div className="fixed bottom-0 right-0 mx-4 mb-4 min-w-[424px] h-auto z-[800]">
+        {alertMessage ? (
+          <div
+            className={`inline-flex items-start bg-white rounded-lg shadow-alert w-full transition duration-500`}
+          >
+            <div
+              className="inline-flex items-start w-full gap-3 p-3"
+              style={{
+                transformStyle: "preserve-3d",
+                perspective: "700px",
+                perspectiveOrigin: "50% 0px",
+              }}
+            >
+              <div className="inline-flex items-start h-full pt-[2px]">
+                {infoIcon}
+              </div>
+
+              <div className="inline-flex flex-col w-full text-sm space-y-1">
+                <div className="inline-flex items-center justify-between w-full">
+                  <span className="text-gray-900">{alertMessage?.title}</span>
+
+                  <button
+                    onClick={() => {
+                      setAlertMessage(null);
+                    }}
+                    className="cursor-pointer inline-flex items-center justify-center hover:bg-gray-100 rounded-full p-1 outline-none"
+                  >
+                    {closeIcon}
+                  </button>
+                </div>
+
+                <p className="text-gray-500">{alertMessage?.body}</p>
+              </div>
+            </div>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
