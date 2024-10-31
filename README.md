@@ -1,3 +1,15 @@
+## Required .env variables
+
+DATABASE_URL=""
+DIRECT_URL=""
+
+NEXT_PUBLIC_SUPABASE_URL=""
+NEXT_PUBLIC_SUPABASE_ANON_KEY=""
+
+OPENAI_API_KEY=""
+
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
