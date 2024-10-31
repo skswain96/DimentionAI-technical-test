@@ -66,6 +66,8 @@ export default function Home() {
           body: "Your issue has been created.",
           type: "success",
         });
+
+        await getIssueList();
       }
 
       closeModal();
