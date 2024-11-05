@@ -18,7 +18,7 @@ export async function getMatchedKeywords(
     - Content: ${issueContent}
     - Tags: ${tags.join(", ")}
     - Input: ${otherInputString}
-    Return only single matched words as an array which is relevant to be used as tags for a new task.
+    Return only single matched words as an array which is relevant to be used as tags for a new task, do not include prepositions words like with, for.
   `;
 
   try {

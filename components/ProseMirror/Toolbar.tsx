@@ -128,11 +128,11 @@ export const Toolbar: React.FC<{
         style={{ height: `${height}px` }}
       >
         {wordList?.length > 0 && hasMatchingWord(issueTitle, wordList) && (
-          <div className="inline-flex items-center w-full space-x-2 pb-3 pt-[2px] transition-opacity ease-in-out duration-300">
+          <div className="inline-flex items-center w-full space-x-2 pb-3 pt-[2px] transition-opacity ease-in-out duration-300 overflow-hidden">
             <div className="inline-flex items-center justify-center text-[#94989E]">
               {suggestionIcon}
             </div>
-            <div className="inline-flex items-center space-x-2">
+            <div className="inline-flex items-center space-x-2 overflow-x-auto">
               {suggestionList.map((opt: any, index: number) => {
                 return (
                   <button
@@ -146,7 +146,9 @@ export const Toolbar: React.FC<{
                       }}
                     />
 
-                    <span className="text-xs font-medium">{opt}</span>
+                    <span className="text-xs font-medium text-nowrap">
+                      {opt}
+                    </span>
                   </button>
                 );
               })}

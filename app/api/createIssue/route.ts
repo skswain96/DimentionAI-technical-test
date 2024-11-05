@@ -4,8 +4,6 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-// const prisma = new PrismaClient();
-
 // Define the expected request body structure
 type IssueData = {
   title: string;

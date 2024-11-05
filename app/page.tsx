@@ -51,7 +51,7 @@ export default function Home() {
       if (!response.ok) {
         setAlertMessage({
           title: "Something went wrong",
-          body: "Failed to create issue.",
+          body: "Failed to create the task.",
           type: "error",
         });
 
@@ -74,10 +74,10 @@ export default function Home() {
     } catch (error) {
       setAlertMessage({
         title: "Something went wrong",
-        body: "Failed to create issue.",
+        body: "Failed to create the task.",
         type: "error",
       });
-      console.error("Failed to create issue:", error);
+      console.error("Failed to create the task:", error);
     }
   }, []);
 
@@ -174,7 +174,7 @@ export default function Home() {
               openModal();
             }}
           >
-            <span>Create Issue</span>
+            <span>Create task</span>
 
             {plusIcon}
           </button>

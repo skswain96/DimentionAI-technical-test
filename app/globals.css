@@ -121,3 +121,47 @@ input::placeholder {
   left: 0;
   top: 0;
 }
+
+.ProseMirror ul[data-type="todo_list"] {
+  list-style-type: none;
+}
+
+.ProseMirror li[data-type="todo_item"] {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.ProseMirror .todo-checkbox {
+  border: 1px solid;
+  height: 0.7em;
+  width: 0.7em;
+  box-sizing: border-box;
+  margin-right: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+  border-radius: 0.2em;
+}
+
+.ProseMirror .todo-content {
+  flex: 1;
+}
+
+.ProseMirror ul[data-type="todo_list"] li::before {
+  content: "";
+  color: #1b1b1b;
+  font-weight: bold;
+  margin-right: 0px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.ProseMirror li[data-done="true"] .todo-checkbox {
+  background-color: black;
+}
+
+.ProseMirror li[data-done="true"] {
+  text-decoration: line-through;
+}

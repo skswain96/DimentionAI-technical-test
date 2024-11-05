@@ -19,6 +19,7 @@ interface ModalProps {
   children: React.ReactNode;
   breadcrumb?: JSX.Element;
   footer?: JSX.Element;
+  disableOverlayClick?: boolean;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -26,6 +27,7 @@ export const Modal: React.FC<ModalProps> = ({
   breadcrumb,
   footer,
   children,
+  disableOverlayClick = false,
 }) => {
   const { isOpen, closeModal } = useModal();
 
@@ -55,7 +57,11 @@ export const Modal: React.FC<ModalProps> = ({
     >
       <div
         className="bg-[#10101239] bg-opacity-[0.95] absolute inset-0"
-        onClick={closeModal}
+        onClick={() => {
+          if (disableOverlayClick) {
+            closeModal();
+          }
+        }}
       />
 
       <div

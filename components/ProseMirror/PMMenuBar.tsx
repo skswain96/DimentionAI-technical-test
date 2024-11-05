@@ -3,7 +3,7 @@ import { useMemo, useRef, useState } from "react";
 import { EditorView } from "prosemirror-view";
 // @ts-ignore
 import { toggleMark, setBlockType, Command } from "prosemirror-commands";
-import { schema } from "prosemirror-markdown";
+
 import { wrapInList, liftListItem } from "prosemirror-schema-list";
 import Picker from "@emoji-mart/react";
 
@@ -22,6 +22,8 @@ import {
   EmojiIcon,
   ReferIcon,
 } from "@/public/icons";
+
+import { extendedSchema as schema } from "./schema";
 
 type IPMMenuItem = {
   command: Command;
@@ -103,6 +105,19 @@ function isInListItem($from: any) {
   return false; // No list item found
 }
 
+// check if its in checked list
+function isInCheckedListItem($from: any) {
+  // Traverse up the parent nodes to find a list item
+  for (let depth = $from.depth; depth > 0; depth--) {
+    const parentNode = $from.node(depth);
+
+    if (parentNode.type === schema.nodes.todo_list) {
+      return true; // We found a list item
+    }
+  }
+  return false; // No list item found
+}
+
 // Define bullet list command
 const toggleBulletList: IPMMenuItem = {
   command: (state: any, dispatch: any) => {
@@ -152,26 +167,25 @@ const toggleOrderedList: IPMMenuItem = {
 // Define checked list toggle command
 const toggleCheckedList: IPMMenuItem = {
   command: (state: any, dispatch: any) => {
-    const { from, $from } = state.selection;
-    const node = $from.node(-1);
+    const { $from } = state.selection;
 
-    if (node.type === schema.nodes.checked_list_item) {
-      // If already in a checked list item, toggle the `done` attribute
-      if (dispatch) {
-        dispatch(
-          state.tr.setNodeMarkup($from.pos, null, {
-            ...node.attrs,
-            done: !node.attrs.done,
-          })
-        );
-      }
-      return true;
+    // Check if the selection is in a checked list item
+    const inCheckedList = isInCheckedListItem($from);
+
+    if (inCheckedList) {
+      // If currently in a checked list item, lift it out
+      const canLift = liftListItem(schema.nodes.todo_item)(state, dispatch);
+      return canLift;
     } else {
-      // Wrap in checked_list if not already in one
-      return wrapInList(schema.nodes.checked_list)(state, dispatch);
+      // Otherwise, try to wrap the selection in a checked list
+      const canWrap = wrapInList(schema.nodes.todo_list)(state, dispatch);
+      if (!canWrap) {
+        console.warn("Cannot wrap selection in checked list.");
+      }
+      return canWrap;
     }
   },
-  icon: <CheckedListIcon />, // Replace with an appropriate icon for checked list
+  icon: <CheckedListIcon />,
 };
 
 const PMMenuBar: React.FC<{ editorView: EditorView }> = ({ editorView }) => {
@@ -229,16 +243,15 @@ const PMMenuBar: React.FC<{ editorView: EditorView }> = ({ editorView }) => {
         <button
           key={index}
           onClick={() => {
-            if (index !== menuItemsData?.length - 1 && index !== 1) {
+            if (index !== 1) {
               command(editorView.state, editorView.dispatch);
               editorView.focus();
             }
           }}
           className={`h-[24px] w-[24px] inline-flex items-center justify-center text-[#6C6F75] hover:bg-gray-100 rounded-full ${
-            index !== menuItemsData?.length - 1 && index !== 1
-              ? "cursor-pointer"
-              : "cursor-not-allowed"
+            index !== 1 ? "cursor-pointer" : "cursor-not-allowed"
           }`}
+          // className={`h-[24px] w-[24px] inline-flex items-center justify-center text-[#6C6F75] hover:bg-gray-100 rounded-full`}
           aria-label={`Toolbar action ${index}`}
         >
           {icon}

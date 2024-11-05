@@ -4,12 +4,60 @@ export function extractKeywords(
   tags: string[],
   input: string
 ): string[] {
+  // List of common prepositions to exclude
+  const prepositions = new Set([
+    "with",
+    "for",
+    "in",
+    "to",
+    "of",
+    "at",
+    "by",
+    "on",
+    "up",
+    "about",
+    "after",
+    "along",
+    "among",
+    "around",
+    "as",
+    "before",
+    "behind",
+    "below",
+    "beneath",
+    "beside",
+    "between",
+    "beyond",
+    "but",
+    "down",
+    "during",
+    "except",
+    "from",
+    "inside",
+    "into",
+    "like",
+    "near",
+    "off",
+    "over",
+    "since",
+    "through",
+    "under",
+    "until",
+    "upon",
+    "within",
+    "without",
+  ]);
+
   // Convert tags array to a single string for easy processing
   const tagsText = tags.join(" ");
 
-  // Helper to extract single words and convert to lowercase
+  // Helper to extract single words, convert to lowercase, and filter out prepositions
   const extractWords = (text: string) => {
-    return new Set(text.toLowerCase().match(/\b\w+\b/g) || []);
+    return new Set(
+      (text.toLowerCase().match(/\b\w+\b/g) || []).filter(
+        (word) => !prepositions.has(word)
+      )
+    );
   };
 
   // Get word sets from each input
