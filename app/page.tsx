@@ -36,7 +36,7 @@ export default function Home() {
 
   const [alertMessage, setAlertMessage] = useState<any>(null);
 
-  const { openModal, closeModal } = useModal();
+  const { openModal, closeModal, isOpen } = useModal();
 
   const handleSubmitTask: any = useCallback(async (data: IssueData) => {
     try {
@@ -145,6 +145,12 @@ export default function Home() {
       });
     }
   }
+
+  useEffect(() => {
+    if (isOpen) {
+      setSuggestionList([]);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     getIssueList();
